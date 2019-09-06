@@ -1,106 +1,54 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
+import api from '../../services/api';
+
+import { formatPrice } from '../../util/format';
 
 import { ProductList } from './styles';
 
-export default function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/sapatenis-couro-pegada-masculino/06/E21-1624-006/E21-1624-006_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis muito legal</strong>
-        <span>R$ 129,90</span>
+export default class Home extends Component {
+  state = {
+    products: [],
+  };
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>Adicionar ao carrinho</span>
-        </button>
-      </li>
+  async componentDidMount() {
+    const response = await api.get('products');
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/sapatenis-couro-pegada-masculino/06/E21-1624-006/E21-1624-006_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis muito legal</strong>
-        <span>R$ 129,90</span>
+    /**
+     * Adiciona o preço formatado no json retornado pela api para evitar que
+     * o componente seja renderizado para cara valor que for formatado dentro
+     * dele.
+     * Por padrão, sempre que uma função é chamada dentro de um componente, o
+     * mesmo será renderizado novamente.s
+     */
+    const data = response.data.map(product => ({
+      ...product,
+      formatedPrice: formatPrice(product.price),
+    }));
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>Adicionar ao carrinho</span>
-        </button>
-      </li>
+    this.setState({ products: data });
+  }
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/sapatenis-couro-pegada-masculino/06/E21-1624-006/E21-1624-006_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis muito legal</strong>
-        <span>R$ 129,90</span>
+  render() {
+    const { products } = this.state;
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>Adicionar ao carrinho</span>
-        </button>
-      </li>
+    return (
+      <ProductList>
+        {products.map(product => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title} />
+            <strong>{product.title}</strong>
+            <span>{product.formatedPrice}</span>
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/sapatenis-couro-pegada-masculino/06/E21-1624-006/E21-1624-006_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis muito legal</strong>
-        <span>R$ 129,90</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>Adicionar ao carrinho</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/sapatenis-couro-pegada-masculino/06/E21-1624-006/E21-1624-006_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis muito legal</strong>
-        <span>R$ 129,90</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>Adicionar ao carrinho</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/sapatenis-couro-pegada-masculino/06/E21-1624-006/E21-1624-006_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis muito legal</strong>
-        <span>R$ 129,90</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>Adicionar ao carrinho</span>
-        </button>
-      </li>
-    </ProductList>
-  );
+            <button type="button">
+              <div>
+                <MdAddShoppingCart size={16} color="#fff" /> 3
+              </div>
+              <span>Adicionar ao carrinho</span>
+            </button>
+          </li>
+        ))}
+      </ProductList>
+    );
+  }
 }

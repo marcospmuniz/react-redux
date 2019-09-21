@@ -5,11 +5,22 @@ import {
   MdAddCircleOutline,
   MdDelete,
 } from 'react-icons/md';
+
 import { formatPrice } from '../../util/format';
+
+import * as CartAction from '../../modules/cart/actions';
 
 import { Container, ProductTable, Total } from './styles';
 
-function Cart({ cart }) {
+function Cart({ cart, dispatch }) {
+  function increment(product) {
+    dispatch(CartAction.updateAmount(product.id, product.amount + 1));
+  }
+
+  function decrement(product) {
+    dispatch(CartAction.updateAmount(product.id, product.amount - 1));
+  }
+
   return (
     <Container>
       <ProductTable>
@@ -34,11 +45,11 @@ function Cart({ cart }) {
               </td>
               <td>
                 <div>
-                  <button type="button">
+                  <button type="button" onClick={() => decrement(product)}>
                     <MdRemoveCircleOutline size={20} color="#7159c1" />
                   </button>
                   <input type="number" readOnly value={product.amount} />
-                  <button type="button">
+                  <button type="button" onClick={() => increment(product)}>
                     <MdAddCircleOutline size={20} color="#7159c1" />
                   </button>
                 </div>
@@ -47,7 +58,12 @@ function Cart({ cart }) {
                 <strong>{formatPrice(product.price * product.amount)}</strong>
               </td>
               <td>
-                <button type="button">
+                <button
+                  type="button"
+                  onClick={() =>
+                    dispatch(CartAction.removeFromCart(product.id))
+                  }
+                >
                   <MdDelete size={20} color="#7159c1" />
                 </button>
               </td>

@@ -5,6 +5,8 @@ import api from '../../services/api';
 
 import { formatPrice } from '../../util/format';
 
+import * as CartActions from '../../modules/cart/actions';
+
 import { ProductList } from './styles';
 
 class Home extends Component {
@@ -34,10 +36,7 @@ class Home extends Component {
     // propriedade que é passada sempre que estamos usando redux
     const { dispatch } = this.props;
 
-    dispatch({
-      type: 'ADD_TO_CART',
-      product,
-    });
+    dispatch(CartActions.addToCart(product));
   };
 
   render() {

@@ -32,11 +32,11 @@ class Home extends Component {
     this.setState({ products: data });
   }
 
-  handleAddProduct = product => {
+  handleAddProduct = id => {
     // propriedade que é passada sempre que estamos usando redux
     const { dispatch } = this.props;
 
-    dispatch(CartActions.addToCart(product));
+    dispatch(CartActions.addToCartRequest(id));
   };
 
   render() {
@@ -53,7 +53,7 @@ class Home extends Component {
 
             <button
               type="button"
-              onClick={() => this.handleAddProduct(product)}
+              onClick={() => this.handleAddProduct(product.id)}
             >
               <div>
                 <MdAddShoppingCart size={16} color="#fff" />{' '}
